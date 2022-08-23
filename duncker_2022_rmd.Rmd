@@ -1,0 +1,172 @@
+---
+title: "RMarkdown: верстаем красивое"
+author: "Антон Ангельгардт"
+date: "ДОБАВИТЬ ДАТУ"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+    toc: yes
+    toc_depth: 3
+---
+
+ВВОДНЫЙ АБЗАЦ
+
+## Установка {#installing}
+
+> Если вдруг ещё не, надо поставить R ([Win](https://cran.r-project.org/bin/windows/base/), [Mac](https://cran.r-project.org/bin/macosx/), [Linux](https://cran.rstudio.com/bin/linux/)) и [RStudio](https://www.rstudio.com/products/rstudio/download/).
+
+Устанавливается RMarkdown как обычный пакет:
+
+```{r, eval=FALSE}
+install.packages("rmarkdown")
+```
+
+Есть ещё пара пакетов, которые не обязательно устанавливать сразу, но они нам пригодятся, чтобы делать красивое:
+
+```{r, eval=FALSE}
+# install.packages("")
+```
+
+## Структура документа {#structure}
+
+* [YAML]()-шапка
+* самый обычный текст (как в блокноте) с форматированием от [Markdown](), расширенный с помощью [Pandoc]()
+* блоки [кода](#code) (в целом, на любом языке программирования)
+* формулы в $\LaTeX$’e
+
+
+### Чё внутри происходит? {#under-the-hood}
+
+
+
+<center>
+<img src="workflow.png">
+</center>
+<p style="float:right; font-size:10pt; margin-top:-5px">
+[Источник](https://bookdown.org/yihui/rmarkdown-cookbook/rmarkdown-process.html)
+</p>
+
+
+## Markdown {#markdown}
+
+### Заголовки {#headers}
+
+### Форматирование {#formatting}
+
+### Списки {#lists}
+
+### Ссылки и картинки {#links-and-pics}
+
+### Цитаты {#quotes}
+
+### Разрыв страницы {#page-break}
+
+### Таблицы {#tables}
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## HTML {#html}
+
+
+## Pandoc {#pandoc}
+
+### Индексы {#sub-and-superscripts}
+
+### Нумерованные примеры {#numbering}
+
+### Сноски {#footnotes}
+
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## $\LaTeX$ {#latex}
+
+Ссылка на ворон латех
+
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## Код {#code}
+
+### Языки программирования {#languages}
+
+### Настройка чанков {#chunk-settings}
+
+### Именование чанков {#chunk-naming}
+
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## YAML-шапка {#yaml}
+
+### Тип аутпута {#output}
+
+### Библиография {#bibtex}
+
+### Оглавление {#toc}
+
+toc вставлять ли оглавление
+toc_depth глубина иерархии, которую отражать в огловлении
+toc_float должно ли оглавление все время следовать за текстом
+collapsed должно ли оглавление быть все время полностью раскрыто
+collapsed должно ли оглавление быть все время полностью раскрыто
+number_sections автоматическая нумерация секций
+code_folding (hide) — делать ли кнопочку, показывающую/скрывающую весь код
+theme одна из Bootstrap тем
+highlight: “default”, “tango”, “pygments”, “kate”, “monochrome”, “espresso”, “zenburn”, “haddock” или “textmate”
+
+### Отображение датафреймов {#df}
+
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## Дизигн {#design}
+
+### CSS {#css}
+
+### Макеты с темами {#themes}
+
+
+***
+
+<img src="code.png" style="width:5%; min-width: 30px">
+
+***
+
+
+## Куда заливать HTML? {#html-hosts}
+
+
+## Что ещё? {#more}
+
+flexdashboard – динамические дэшборды
+shiny – динамические сайты, которые позволяют взаимодействовать с пользователем
+posterdown – постеры в RMarkdown
+pagedown – содержит много шаблонов: для книги, статьи, постера, резюме, визитки… да хоть приглашение на свадьбу можно сделать.
+
