@@ -9,7 +9,16 @@ output:
     toc: yes
     toc_depth: 3
     css: "style.css"
+bibliography: references.bib
 ---
+
+
+```{r setup, include=FALSE}
+# which python3
+library(reticulate)
+use_python("/usr/local/bin/python3")
+library(knitr)
+```
 
 **RMarkdown** --- это пакет, который позволяет соединять текст, исполняемый код и результаты исполнения кода в единый документ. Это очень полезно для представления данных. На выходе мы можем получить файлы `.html`, `.pdf` --- в том числе презентации форматов `.html` и `.pdf`[^pdf_pres] --- `.docx`, `.pptx`. Более того, можно связать несколько HTML-документов и получить сайт или книгу. Ну, гениально же!
 
@@ -70,6 +79,38 @@ install.packages("prettydoc")
 </center>
 
 Возникнет дефолтный `.rmd`-файл.
+
+````
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}`r ''`
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}`r ''`
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}`r ''`
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+````
 
 Его можно скомпилировать либо с помощью функции `rmarkdown::render("file.Rmd")`, либо жмакнув кнопку `Knit` вверху текстового редактора.
 
@@ -300,7 +341,7 @@ install.packages("prettydoc")
 А ещё если у вас есть теги на заголовках, можно ссылаться и внутрь документа, например [так](#tables).
 
 [1]: https://www.google.com/
-[метку]: https://www.google.com/
+[метку]: https://yandex.ru/
 
 ```
 
@@ -313,7 +354,7 @@ install.packages("prettydoc")
 Если хочется собрать все ссылки в одном месте, то для отображения их в тексте можно оставить [метку][1] или даже просто [метку].
 
 [1]: https://www.google.com/
-[метку]: https://www.google.com/
+[метку]: https://yandex.ru/
 
 А ещё если у вас есть теги на заголовках, можно ссылаться и внутрь документа, например [так](#tables).
 
@@ -530,6 +571,20 @@ $$
 
 <img class="task" src="code.png">
 
+<div class="task">
+Давайте напишем какую-нибудь формулу в свою статью, что сделать вид, что мы жесть какие умные и что-то понимаем в том, что исследуем. Например, что-то умное про логистическую регрессию:
+
+$$
+p_i = \frac{e^{\beta_0 + \sum_{k=1}^p \beta_kx_{ik}}}{1 + e^{\beta_0 + \sum_{k=1}^p \beta_kx_{ik}}}
+$$
+
+или просто что-то на статистическом про диперсию:
+
+$$
+\mathbb{D}(X) = \mathbb{E}(X^2) - \mathbb{E}^2(X)
+$$
+</div>
+
 ***
 
 
@@ -564,7 +619,9 @@ mean(x)
 ```
 
 
-Можно сделать и питон:
+Можно сделать и питон[^run_python]:
+
+[^run_python]: Чтобы оно поехало, нало будет создать чанк, в котором подгружается пакет `reticulate` (стандартно, через `library(reticulate)`) и указывается, какой питон использовать при исполнении кода через `use_python("path_to_python")`. Путь к питону можно узнать через командную строку с помощью `which python3`.
 
 ````
 ```{python}`r ''`
@@ -574,37 +631,253 @@ for word in spisok:
 ```
 ````
 
+
 ```{python}
 spisok = ["where", "is", "my", "beer"]
 for word in spisok:
     print(word)
 ```
 
+Можно вытворить и нечто подобное:
 
+```{bash}
+echo "хало ворлд"
+```
 
+Если вы совсем странненький, то можно сделать и что-то такое:
 
+```{r engine='Rcpp'}
+#include <Rcpp.h>
 
+// [[Rcpp::export]]
+int fibonacci(const int x) {
+    if (x == 0 || x == 1) return(x);
+    return (fibonacci(x - 1)) + fibonacci(x - 2);
+}
+```
+
+```{r}
+fibonacci(10L)
+```
 
 
 
 
 ### Настройка чанков {#chunk-settings}
 
+У чанков достаточно много настроек. Самые важные --- `echo`, `eval` и `include`.
+
+````
+Отображается и код, и аутпут:
+
+```{r}`r ''`
+# Pharmacokinetics of Indomethacin
+head(Indometh)
+```
+
+Отображается, но *не* исполняется:
+
+```{r, eval=FALSE}`r ''`
+# это я просто покажу, как пакет c гитхаба подгрузить
+# полезный пакет, кстати, там есть неплохие шаблоны
+devtools::install_github("rstudio/radix")
+```
+
+*Не* отображается код, но выводится аутпут:
+
+```{r, echo=FALSE}`r ''`
+print("о боже, как много настроек, я уже забыл, какая первая была")
+```
+
+*Не* отображается *ни* код, *ни* аутпут, но чанк исполняется[^include]:
+
+```{r, include=FALSE}`r ''`
+vec <- 1:24
+```
+
+[^include]: Параметр `include` в основном используется для задания параметров верстки.
+
+Это значит, что хоть мы и не видим, что вектор создан, мы можем к нему обратиться:
+
+```{r}`r ''`
+vec
+```
+````
+
+<div class="example">
+Отображается и код, и аутпут:
+
+```{r}
+# Pharmacokinetics of Indomethacin
+head(Indometh)
+```
+
+Отображается, но *не* исполняется:
+
+```{r, eval=FALSE}
+# это я просто покажу, как пакет c гитхаба подгрузить
+# полезный пакет, кстати, там есть неплохие шаблоны
+devtools::install_github("rstudio/radix")
+```
+
+*Не* отображается код, но выводится аутпут:
+
+```{r, echo=FALSE}
+print("о боже, как много настроек, я уже забыл, какая первая была")
+```
+
+*Не* отображается *ни* код, *ни* аутпут, но чанк исполняется[^include]:
+
+```{r, include=FALSE}
+vec <- 1:24
+```
+
+[^include]: Параметр `include` в основном используется для задания параметров верстки.
+
+Это значит, что хоть мы и не видим, что вектор создан, мы можем к нему обратиться:
+
+```{r}
+vec
+```
+</div>
+
+Если и [другие](https://yihui.org/knitr/options/#chunk_options) аргументы, их много. Кратко перечислю самые полезные:
+
+* `error` --- отображать ли ошибки исполнения:
+  * если `FALSE`, то верстка ломается на чанке, который не может выполниться
+  * если `TRUE`, то верстка не ломается, а ошибка отображается в итоговом файле
+* `warning` --- отображать ли предупреждения
+* `message` --- отображать ли сообщения (например, при подключении пакетов)
+* `comment` --- по дефолту результат работы кода предваряется знаком `##`
+  * чтобы его не было, надо прописать `NA`
+* `cache` --- кэшировать ли результат работы фрагмента кода
+  * Полезная фича, когда вы работаете с какими-либо сложными или большими операциями, занимающими много времени. Если результата закэшировн, он не будет пересчитываться при новой компиляции --- значит, будет тратиться меньше времени.
+
+
+
 ### Именование чанков {#chunk-naming}
 
+Каждому чанку можно дать собственное имя (без пробелов и точек внутри имени). Оно указывается после языка:
+
+````
+```{r my_super_fancy_graph}`r ''`
+library(tidyverse)
+theme_set(theme_bw())
+diamonds %>% 
+  ggplot(aes(price)) +
+  geom_histogram(data = diamonds %>% select(-color), fill="lightgray") +
+  geom_histogram(aes(fill = color)) +
+  facet_wrap(~ color)
+```
+````
+
+```{r}
+library(tidyverse)
+theme_set(theme_bw())
+diamonds %>% 
+  ggplot(aes(price)) +
+  geom_histogram(data = diamonds %>% select(-color), fill="lightgray") +
+  geom_histogram(aes(fill = color)) +
+  facet_wrap(~ color)
+```
+
+В целом, этого можно и не делать, однако есть [несколько причин](https://masalmon.eu/2017/08/08/chunkpets/) этого делать:
+
+* проще читать код
+* проще ориентироваться в том, что вы написали год назад
+* в случае ошибок при компиляции будет отображаться имя чанка, а не номер
+* если чанк закэширован, при добавлении нового перед ним не надо все опять пересчитывать
+* можно ссылаться в `blogdown`
+* при верстке книг в `bookdown` вы избежите косяков по типу того, что на картинке
+
+<center>
+<img src="kosyak.png">
+</center>
 
 ***
 
 <img class="task" src="code.png">
+<div class="task">
+Возьмите какой-либо встроенный датасет (`library(help = "datasets")`) и напишите код, который: 
+
+* выведет описательные статистики по какой-то количественной переменной
+* визуализирует её распределение
+</div>
 
 ***
 
 
 ## YAML-шапка {#yaml}
 
+Это то, что находится вверху документа и содержит какие-то метаданные о вашем файле. Например, вот
+
+```
+---
+title: "RMarkdown: верстаем красивое"
+author: "Антон Ангельгардт"
+date: "31.08.202"
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+    toc: yes
+    toc_depth: 3
+    css: "style.css"
+---
+```
+
+
 ### Тип аутпута {#output}
 
+Пожалуй, самое важное. Есть несколько вариантов:
+
+* `output: html_document` --- это настроено по умолчанию
+* `output: word_document`
+* `output: pdf_document` (придется подружить с $\LaTeX$ом на вашем компе)
+* `output: ioslides_presentation`
+* `output: slidy_presentation`
+* `output: slidy_presentation`
+* `output: beamer_presentation`
+и т.д., и т. п., и пр., и др.
+
+
 ### Библиография {#bibtex}
+
+Здесь мы упомянем `BibTeX`, который вообще-то хорошо дружит с $\LaTeX$, но сюда прикрепить тоже можно. Это не единственный способ, но, наверное, самый универсальный.
+
+1. Создаем файл `.bib` со всей библиографией. [GoogleScholar](https://scholar.google.com/) генерирует ссылки в формате `BibTeX` автоматически.
+
+```
+@book{xie2016bookdown,
+  title={Bookdown: Authoring books and technical documents with R markdown},
+  author={Xie, Yihui},
+  year={2016},
+  publisher={Chapman and Hall/CRC}
+}
+
+@book{xie2017blogdown,
+  title={Blogdown: creating websites with R markdown},
+  author={Xie, Yihui and Thomas, Amber and Hill, Alison Presmanes},
+  year={2017},
+  publisher={Chapman and Hall/CRC}
+}
+```
+
+2. Прописываем в шапке, какой файл отвечает за библиографию:
+
+```
+bibliography: references.bib
+```
+
+3. Используем ссылки в тексте, как [вот тут](#more)
+
+```
+* `bookdown` --- [расширение RMarkdown](https://bookdown.org/yihui/bookdown/) для написания книг, диссера, создания перезентаций и т.д. (@xie2016bookdown)
+* `blogdown` --- сайты [можно пилить](https://bookdown.org/yihui/blogdown/) (@xie2017blogdown)
+```
+
+4. Список литературы сам формируется в конце.
+
 
 ### Оглавление {#toc}
 
@@ -616,16 +889,39 @@ for word in spisok:
 * `collapsed` --- должно ли оглавление быть все время полностью раскрыто
 * `number_sections` --- автоматическая нумерация секций
 * `code_folding (hide)` --- делать ли кнопочку, показывающую/скрывающую весь код
-* `theme` --- одна из Bootstrap тем
-highlight: “default”, “tango”, “pygments”, “kate”, “monochrome”, “espresso”, “zenburn”, “haddock” или “textmate”
 
 
-### Отображение датафреймов {#df}
+
+## Отображение датафреймов {#df}
+
+Мы уже выше видели, что будет, если попытаться вывести датафрейм --- что-то такое:
+
+```{r}
+head(diamonds)
+```
+
+Некрасиво.
+
+Надо, чтобы было красиво.
+
+Для этого есть удобненькая функция `kable()` в пакете `knitr`. Во-первых, она сделаем красивое сама, во-вторых, там можно переименовать колонки --- а это важно, ибо переменные в датасете обычно не то чтобы очень понятно и понимабельно называются.
+
+```{r}
+head(diamonds) %>% 
+  kable(col.names=str_to_title(colnames(.)))
+```
 
 
 ***
 
 <img class="task" src="code.png">
+
+<div class="task">
+Давайте
+
+* добавим оглавнение в нашу статью
+* покажем, как выглядели данные (то есть, отобразим часть датафрейма, по которому считали описательные статистики, красиво.)
+</div>
 
 ***
 
@@ -634,31 +930,63 @@ highlight: “default”, “tango”, “pygments”, “kate”, “monochrome
 
 ### CSS {#css}
 
+Если вы магистр всея [Cascading Style Sheets](https://en.wikipedia.org/wiki/CSS), то можете полностью накастомизировать все, что хотите. Только подключите потом к самому файлу:
+
+```
+css: "style.css"
+```
+
 ### Макеты с темами {#themes}
 
-Мы в самом начале установили пакет `prettydoc`, который содержит в себе весьма pretty темы для RMarkdown-документов.
+Мы в самом начале установили пакет `prettydoc`, который содержит в себе весьма pretty темы для RMarkdown-документов. Создать `prettydoc`-файл можно так:
 
+`File > New File > RMarkdown... > From Template > Lightweight and Pretty Document (HTML)`
 
+<center>
+<img src="prettydoc_creating.png">
+</center>
+
+YAML-шапка генерируется автоматически, что хорошо. Если вам не нравится, какая тема применилась по умолчанию, можно выбрать [другую](https://prettydoc.statr.me/themes.html).
+
+```
+theme: architect
+```
 
 
 ***
 
 <img class="task" src="code.png">
 
+<div class="task">
+Примените какую-нибудь тему из пакета `prettydoc`, чтобы статья стала неистово pretty.
+</div>
+
 ***
 
 
 ## Куда заливать HTML? {#html-hosts}
+
+В качестве аутпута мы получаем файл `.html`, а значит, чтобы мир его увидел, он должен быть где-то в интернетах. Вариантов несколько:
+
+* вы завели собственный хост и живете прекрасно
+* вы завели GitHub и включили GitHub Pages и живете не менее прекрасно
+* вы пользуетесь бесплатным хостингом Rpubs
+
+<center>
+<img src="rpubs.png">
+</center>
 
 
 ## Что ещё? {#more}
 
 Представление данных, конечно, не ограничивается RMarkdown. Вот некоторые штуки, которые также могут быть полезны:
 
-* `bookdown` --- расширение RMarkdown для написания книг, диссера, создания перезентаций и т.д.
+* `bookdown` --- [расширение RMarkdown](https://bookdown.org/yihui/bookdown/) для написания книг, диссера, создания перезентаций и т.д. (@xie2016bookdown)
 * `shiny` --- динамические сайты, на которых можно развернуть взамодействие с пользователем
 * `flexdashboard` --- динамические дэшборды
 * `posterdown` --- постеры в RMarkdown
 * `pagedown` --- тут много всяких шаблонов примерно для всего (от книги, статьи и резюме до приглашения на свадьбу)
-* `blogdown` --- сайты можно пилить
+* `blogdown` --- сайты [можно пилить](https://bookdown.org/yihui/blogdown/) (@xie2017blogdown)
 
+
+## Список литературы
