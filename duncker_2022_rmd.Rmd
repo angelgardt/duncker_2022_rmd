@@ -1,7 +1,7 @@
 ---
 title: "RMarkdown: верстаем красивое"
 author: "Антон Ангельгардт"
-date: "31.08.202"
+date: "31.08.2022"
 output:
   prettydoc::html_pretty:
     theme: architect
@@ -395,7 +395,14 @@ Note that the `echo = FALSE` parameter was added to the code chunk to prevent pr
 
 <font size=2>Лично я не большой фанат вставлять картинки средствами Markdown, поэтому использую HTML. Там больше возможностей кастомизации отображения.</font>
 
-
+<details>
+<summary><font size=2>Вот так делаю</font></summary>
+```
+<center>
+<img src="path_to_pic">
+</center>
+```
+</details>
 
 
 
